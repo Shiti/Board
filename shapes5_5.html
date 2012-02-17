@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Drawing Shapes</title>
+		<style type="text/css">
+			#cnvs
+			{
+				float:left;
+			}
+						
+			#toolbar
+			{
+				float:left;
+				margin-left:10px;
+			}
+			
+			.tools
+			{	
+				height:38px;
+				width:38px;
+				outline:gray solid thin;
+				background-repeat:no-repeat;
+				background-position:center;
+			}
+			
+			.selected
+			{
+				height:38px;
+				width:38px;
+				outline:red solid thin;
+			}
+			
+			#pencil
+			{	
+				background-image:url(pencil.png);
+			}
+			
+			#circle
+			{	
+				background-image:url(circle.png);				
+			}
+			
+			#rect
+			{	
+				background-image:url(rectangle.png);
+			}
+			
+			#cursor
+			{	
+				background-image:url(cursor.png);				
+			}
+			
+			#eraser
+			{	
+				background-image:url(eraser.png);				
+			}
+			
+			#line
+			{	
+				background-image:url(line.png);
+			}
+			
+			#brush
+			{	
+				background-image:url(brush.png);
+			}
+			#clearall
+			{	
+				background-image:url(clear.png);
+			}
+		</style>
+		<script type="text/javascript" src="http://code.jquery.com/jquery-1.6.2.js"></script>
+		<script type="text/javascript" src="http://meta100.github.com/mColorPicker/javascripts/mColorPicker_min.js" charset="UTF-8"></script>
+		<script type="text/javascript">
+			$.fn.mColorPicker.init.replace = false;
+			$(document).ready(function(){
+				init();
+				canvas.height=$(window).height()-50;
+				canvas.width=$(window).width()-120;
+				$(".tools").click(function(){
+					$(".selected").removeClass("selected");
+					$(this).addClass("selected");
+					selectedTool=this.id;
+					context.lineWidth=1;
+					context.strokeStyle=linecol;
+					if(selectedTool=="clearall")
+					{
+						clearCanvas();
+					}
+				});
+				$('#bgcolor').mColorPicker();
+				$('#bgcolor').bind('colorpicked', function(){
+					bgcol=($(this).val());
+					context.fillStyle=bgcol;
+					context.fillRect(0,0,document.getElementById("board").width,document.getElementById("board").height);
+				});
+				
+				$('#fgcolor').mColorPicker();
+				$('#fgcolor').bind('colorpicked', function(){
+					fgcol=($(this).val());
+				});
+				
+				$('#linecolor').mColorPicker();
+				$('#linecolor').bind('colorpicked', function(){
+					linecol=($(this).val());
+					context.strokeStyle=linecol;
+				});
+			});
+			
+		</script>	
+		
+	</head>
+	<body>
+		<div id="container">
+			<div id="cnvs">
+				<canvas id="board">
+			</div>
+			
+			<div id="toolbar">
+			Toolbar
+			<div id="pencil" class="tools"> </div>
+			<div id="rect" class="tools"> </div>
+			<div id="line" class="tools"> </div>
+			<div id="circle" class="tools"> </div>
+			<div id="brush" class="tools"> </div>
+			<div id="cursor" class="tools"> </div>
+			<div id="eraser" class="tools"> </div>
+			<div id="clearall" class="tools"> </div>
+			</div>			
+		</div>	
+		<div id="palette">
+			<input id="bgcolor" type="color" placeholder="Background color"/>
+			<input id="linecolor" type="color" placeholder="Line color"/>
+			<input id="fgcolor" type="color" placeholder="Foreground color"/>
+		</div>
+	</body>
+	<script src="http://www.html5canvastutorials.com/libraries/kinetic-v1.2.0.js"></script>
+	<script type="text/javascript">
+		var canvas;
+		var context;
+		var startX=0;
+		var startY=0;
+		var endX=0;
+		var endY=0;
+		var diffX=0;
+		var diffY=0;
+		var height=0;
+		var width=0;
+		var selectedTool="cursor";
+		var started;
+		var x,y;
+		var bgcol="white";
+		var linecol="black";
+		var fgcol;
+		
+		var kin;
+				 
+		var rectX = 0;
+		var rectY = 0;
+		var draggingRect = false;
+		var draggingRectOffsetX = 0;
+		var draggingRectOffsetY = 0;
+		
+		var boxes = [];
+		
+		function init()
+		{
+			//canvas=document.getElementById("board");
+			//context=canvas.getContext("2d");
+			started=false;
+
+			kin = new Kinetic("board", "2d");
+			canvas = kin.getCanvas();
+			context = kin.getContext();
+			context.globalCompositeOperation = "destination-over";
+
+			canvas.addEventListener('mousedown',mouseDown,false);
+			canvas.addEventListener('mouseup',mouseUp,false);
+			canvas.addEventListener('mouseout',mouseOut,false);
+			canvas.addEventListener('mousemove',mouseMove,false);
+			
+		}
+		
+		function mouseOut(event)
+		{
+			started=false;
+		}
+		
+		function mouseMove(event)
+		{
+			
+			if(selectedTool=="pencil"||selectedTool=="brush"||selectedTool=="eraser")
+			{
+				if (event.clientX || event.clientY == 0)
+				{
+					x=event.clientX;
+					y=event.clientY;
+					
+					if(selectedTool!="pencil")
+					{
+						context.lineWidth=5;
+					}
+					
+					if(selectedTool=="eraser")
+					{
+						context.strokeStyle=bgcol;
+					}
+					
+					if (started) 
+					{
+						context.lineTo(x, y);
+						context.stroke();
+						
+					} 
+					else 
+					{
+						context.beginPath();
+						context.moveTo(x, y);
+					}
+				}
+			}		
+		}
+		
+		function mouseDown(event)
+		{	
+			startX=event.clientX;
+			startY=event.clientY;
+			started=true;
+		}
+		
+		function mouseUp(event)
+		{
+			console.log(linecol);
+			endX=event.clientX;
+			endY=event.clientY;
+			started=false;
+			
+			if(selectedTool=="rect")
+			{	
+				kin.beginRegion();
+				drawRectangle(startX,startY,endX,endY);
+				context.restore();
+				kin.closeRegion();
+				
+				addRectangle(startX,startY,endX,endY);
+		
+				console.log(boxes.length);
+			}
+			if(selectedTool=="line")
+			{
+				drawLine();
+			}
+			if(selectedTool=="circle")
+			{
+				drawCircle();
+			}
+		}
+		
+		function drawLine()
+		{
+			context.moveTo(startX,startY);
+			context.lineTo(endX,endY);
+			context.stroke();
+		}
+		
+		function drawRectangle(cornerX,cornerY,corner2X,corner2Y)
+		{			
+			diffX=-corner2X+cornerX;
+			diffY=-corner2Y+cornerY;
+			context.strokeRect(cornerX,cornerY,-diffX,-diffY);			
+		}
+		
+		function drawCircle()
+		{
+			x=(startX+endX)/2;
+			y=(startY+endY)/2;
+			diffX=(startX-endX)*(startX-endX);
+			diffY=(startY-endY)*(startY-endY);
+			var radius=Math.sqrt(diffX+diffY)/2;
+			context.beginPath();
+			context.arc(x,y,radius,0,2*Math.PI,false);
+			context.stroke();
+		}
+		
+		function clearCanvas()
+		{
+			context.clearRect(0,0,canvas.width,canvas.height);
+		}
+		
+		//Box object to hold data for all drawn rects
+		function Box() 
+		{
+			this.x = 0;
+			this.y = 0;
+			this.w = 1; // default width and height
+			this.h = 1;
+		}
+ 
+		//Initialize a new Box, add it, and invalidate the canvas
+		function addRectangle(cornerX,cornerY,corner2X,corner2Y) 
+		{
+			
+			var rect = new Box;
+			diffX=-corner2X+cornerX;
+			diffY=-corner2Y+cornerY;
+ 			rect.x = x;
+			rect.y = y;
+			rect.w = -diffX;
+			rect.h = -diffY;
+			boxes.push(rect);
+		}
+		
+	</script>
+	
+</html>

@@ -1,0 +1,65 @@
+			#cnvs
+			{
+				float:left;
+			}
+						
+			#toolbar
+			{
+				float:left;
+				margin-left:10px;
+			}
+			
+			.tools
+			{	
+				height:38px;
+				width:38px;
+				outline:gray solid thin;
+				background-repeat:no-repeat;
+				background-position:center;
+			}
+			
+			.selected
+			{
+				height:38px;
+				width:38px;
+				outline:red solid thin;
+			}
+			
+			#pencil
+			{	
+				background-image:url(pencil.png);
+			}
+			
+			#circle
+			{	
+				background-image:url(circle.png);				
+			}
+			
+			#rect
+			{	
+				background-image:url(rectangle.png);
+			}
+			
+			#cursor
+			{	
+				background-image:url(cursor.png);				
+			}
+			
+			#eraser
+			{	
+				background-image:url(eraser.png);				
+			}
+			
+			#line
+			{	
+				background-image:url(line.png);
+			}
+			
+			#brush
+			{	
+				background-image:url(brush.png);
+			}
+			#clearall
+			{	
+				background-image:url(clear.png);
+			}

@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Drawing Shapes</title>
+		<link rel="stylesheet" type="text/css" href="mystylesheet.css"/>
+		<script type="text/javascript" src="http://code.jquery.com/jquery-1.6.2.js"></script>		
+		<script type="text/javascript" src="http://meta100.github.com/mColorPicker/javascripts/mColorPicker_min.js"></script>
+		<script type="text/javascript">
+			$.fn.mColorPicker.init.replace = false;//initialise color picker with no color
+			$(document).ready(function(){
+				
+				//reading client window height and width
+				height=$(window).height()-50;
+				width=$(window).width()-120;
+				
+				//initialise the canvas 				
+				init();
+				
+				//to select a tool from the toolbar
+				$(".tools").click(function(){
+					$(".selected").removeClass("selected");
+					$(this).addClass("selected");
+					selectedTool=this.id;
+					context.lineWidth=1;
+					context.strokeStyle=linecol;
+					
+					if(selectedTool!="cursor")
+					{
+						if(document.getElementById('board').childNodes.length==1)
+						{
+							addTempCanvas();
+						}
+						if(selectedTool=="clearall")
+						{
+							clearCanvas();
+						}
+					}
+					else 
+					{
+						$('#tempImg').remove();
+					}
+					
+					
+				});
+
+				//to select background,line and foreground color
+				/*
+				$('#bgcolor').mColorPicker();
+				$('#bgcolor').bind('colorpicked', function(){
+					bgcol=($(this).val());
+					$('#board').css("background-color",bgcol);
+				});
+								
+				$('#fgcolor').mColorPicker();
+				$('#fgcolor').bind('colorpicked', function(){
+					fgcol=($(this).val());
+					context.fillStyle=fgcol;
+				});
+				*/
+				$('#linecolor').mColorPicker();
+				$('#linecolor').bind('colorpicked', function(){
+					linecol=($(this).val());
+					context.strokeStyle=linecol;
+				});
+				
+			});		
+		</script>	
+		
+	</head>
+	<body>
+		<div id="container">
+			<div id="cnvs">
+				<canvas id="board">
+				This text is displayed if your browser does not support HTML5 Canvas.
+				</canvas>
+			</div>
+			
+			<div id="toolbar">
+			Toolbar
+			<div id="pencil" class="tools"> </div>
+			<div id="rect" class="tools"> </div>
+			<div id="line" class="tools"> </div>
+			<div id="circle" class="tools"> </div>
+			<div id="brush" class="tools"> </div>
+			<div id="cursor" class="tools"> </div>
+			<div id="eraser" class="tools"> </div>
+			<div id="clearall" class="tools"> </div>
+			</div>			
+			
+		</div>	
+		<div id="palette">
+			<!-- <input id="bgcolor" type="color" placeholder="Background color"/> -->
+			<input id="linecolor" type="color" placeholder="Line color"/>
+			<!-- <input id="fgcolor" type="color" placeholder="Foreground color"/> -->
+		</div>
+	</body>
+	
+	<script type="text/javascript">
+
+		//variables for original and temporary canvas		
+		var canvas,context;
+		var canvaso,contexto;
+		
+		//starting coordinates
+		var startX=0;
+		var startY=0;
+		
+		//ending coordinates
+		var endX=0;
+		var endY=0;
+		
+		var diffX=0;
+		var diffY=0;
+		
+		//height and width of canvas
+		var height=0;
+		var width=0;
+
+		var selectedTool;
+		
+		//to store the status of mouse button up or down		
+		var started;
+		
+		//x and y will have the values of the coordinates of the mouse 
+		var x,y;
+		
+		//variables to store the selected color
+		var bgcol="white";
+		var linecol="black";
+		//var fgcol; //not used 
+		
+		//to create parent node for the canvas
+		var container;
+		
+		var parent=document.getElementById('board');
+		
+		// drag and drop globals
+		var offsetX = 0;
+		var offsetY = 0;
+		
+		function init()
+		{
+			canvaso = document.getElementById('board');
+			contexto = canvaso.getContext('2d');
+			canvaso.height = height;
+			canvaso.width = width;
+			
+			addTempCanvas();
+			
+			started=false; 
+
+		}
+		
+		//creating a temporary canvas from which images will be copied onto the original canvas
+		function addTempCanvas()
+		{
+			container = canvaso.parentNode;	
+			canvas = document.createElement('canvas');
+			canvas.id     = 'tempImg';
+			canvas.width  = width;
+			canvas.height = height;
+			container.appendChild(canvas);
+			context = canvas.getContext('2d');
+			
+			//adding event listeners
+			canvas.addEventListener('mousedown',mouseDown,false);
+			canvas.addEventListener('mouseup',mouseUp,false);
+			canvas.addEventListener('mousemove',mouseMove,false);
+			canvas.addEventListener('mouseout',mouseOut,false);
+			
+			canvaso.addEventListener('mouseup', canvMouse, false);
+		}
+
+		function canvMouse(event)
+		{
+			if (selectedTool == "cursor") 
+			{
+				startX=event.screenX;
+				startY=event.screenY;
+			}
+		}
+		
+		//if the mouse is clicked and dragged out of the canvas, nothing should be drawn
+		function mouseOut(event)
+		{
+			started=false;
+		}
+			
+		//this defines what should be done when the mouse is moved
+		function mouseMove(event)
+		{
+			context.strokeStyle=linecol;
+			if (event.clientX || event.clientY == 0)
+			{
+				x=event.clientX;
+				y=event.clientY;
+
+				if(selectedTool=="pencil"||selectedTool=="brush"||selectedTool=="eraser")
+				{					
+					if(selectedTool!="pencil")
+					{
+						context.lineWidth=5;
+					}
+					
+					if(selectedTool=="eraser")
+					{	
+						context.strokeStyle=bgcol;
+					}
+					
+					if (started) 
+					{
+						context.lineTo(x, y);
+						context.stroke();
+						
+					} 
+					else 
+					{
+						context.beginPath();
+						context.moveTo(x, y);
+					}
+				}
+				
+				else if(selectedTool=="clearall")
+				{
+				}
+
+				/*else if(selectedTool=="cursor")
+				{
+					
+				}*/
+				else 
+				{
+					if(started)
+					{
+						context.clearRect(0, 0,width,height);
+						drawShape(selectedTool,startX,startY,x,y);
+					}
+				}
+			}
+		}
+		
+		/*only when the mouse button is pressed down, should anything be drawn.so before drawing an image,the value of started is checked and is drawn only if the value is true*/
+		function mouseDown(event)
+		{	
+			startX=event.clientX;
+			startY=event.clientY;
+			started=true;
+		}
+		
+		//only after the mouse button is left i.e., mouseup,the object is actually drawn onto the canvas depending on the tool
+		function mouseUp(event)
+		{
+			endX=event.clientX;
+			endY=event.clientY;
+			started=false;
+
+			drawShape(selectedTool,startX,startY,endX,endY);
+			img_update();
+		}
+		
+		//after every mouse up,the image drawn on the temporary canvas is redrawn onto the original canvas
+		function img_update() 
+		{
+			contexto.beginPath();
+			contexto.drawImage(canvas, 0, 0);
+			contexto.closePath();
+			context.clearRect(0, 0, canvas.width, canvas.height);
+		}
+		
+		function drawShape(tool,cornerX,cornerY,corner2X,corner2Y)
+		{
+			switch(tool)
+			{
+				//to draw a line
+				case "line": 
+				{
+					context.beginPath();
+					context.moveTo(cornerX,cornerY);
+					context.lineTo(corner2X,corner2Y);
+					context.stroke();
+					context.closePath();
+				}
+				break;
+		
+				//to draw a rectangle
+				case "rect":
+				{			
+					diffX=-corner2X+cornerX;
+					diffY=-corner2Y+cornerY;
+					context.strokeRect(cornerX,cornerY,-diffX,-diffY);			
+				}
+				break;
+
+				//to draw a circle
+				case "circle":
+				{
+					x=(cornerX+corner2X)/2;
+					y=(cornerY+corner2Y)/2;
+					diffX=(cornerX-corner2X)*(cornerX-corner2X);
+					diffY=(cornerY-corner2Y)*(cornerY-corner2Y);
+					var radius=Math.sqrt(diffX+diffY)/2;
+					context.beginPath();
+					context.arc(x,y,radius,0,2*Math.PI,false);
+					context.stroke();
+				}
+				break;
+			}
+		}
+		
+		//to clear canvas
+		function clearCanvas()
+		{
+			contexto.clearRect(0,0,width,height);
+		}
+	</script>
+	
+</html>

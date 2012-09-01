@@ -22,7 +22,7 @@
 			}
 			
 			#toolbar
-			{
+			{	cursor:default;
 				float:left;
 				margin-left:10px;
 			}
@@ -81,3 +81,4 @@
 			{	
 				background-image:url(clear.png);
 			}
+

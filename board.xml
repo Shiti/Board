@@ -258,9 +258,13 @@
 
 		gapi.hangout.onApiReady.add(function(eventObj) 
                 { 
-                   if (eventObj.isApiReady) { 
-                   	startApp(); 
-                  }  
+	         	try{
+	                   if (eventObj.isApiReady) { 
+	                   	startApp(); 
+	                  }  
+	                catch(e){
+	                console.log(e.message);
+	                }
                 }); 
 	</script>			
 	</head>

@@ -240,9 +240,13 @@
 			contexto.clearRect(0,0,width,height);
 		}
 
-		gapi.hangout.onApiReady.add(function(eventObj)
-		{
-			if (eventObj.isApiReady) {
-				startApp();
-			}
-		});
+		gapi.hangout.onApiReady.add(function(eventObj) 
+                { 
+                   try { 
+                        if (eventObj.isApiReady) { 
+                                startApp(); 
+                        } 
+                  catch (e) { 
+                        console.log(e.stack); 
+                  } 
+                }); 

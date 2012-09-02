@@ -259,11 +259,12 @@
 		gapi.hangout.onApiReady.add(function(eventObj) 
                 { 
 	         	try{
-	                   if (eventObj.isApiReady) { 
-	                   	startApp(); 
-	                  }  
+	                	if (eventObj.isApiReady) { 
+	                   		startApp(); 
+	                  	} 
+	                }
 	                catch(e){
-	                console.log(e.message);
+	                	console.log(e.message);
 	                }
                 }); 
 	</script>			

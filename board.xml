@@ -11,7 +11,7 @@
       	<html>
       	<head>
 	<link rel="stylesheet" type="text/css" href="https://raw.github.com/Shiti/Board/master/mystylesheet.css"/>
-	<script type="text/javascript" src="http://code.jquery.com/jquery-1.6.2.js"></script>		
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>		
 	<script type="text/javascript" src="http://meta100.github.com/mColorPicker/javascripts/mColorPicker_min.js"></script>
 	<script type="text/javascript" src="https://raw.github.com/Shiti/Board/master/app.js"></script>			
 	</head>

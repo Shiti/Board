@@ -6,9 +6,7 @@
   </ModulePrefs>
   <Content type="html">
     <![CDATA[
-      <!--<script src="//hangoutsapi.talkgadget.google.com/hangouts/_/api/hangout.js?v=1.2"></script>-->
-	<script src="//hangoutsapi.talkgadget.google.com/talkgadget/apps/gadgets/js/rpc.js"></script>
-	<script src="//hangoutsapi.talkgadget.google.com/hangouts/api/hangout.js?v=1.1"></script>
+      <script src="//hangoutsapi.talkgadget.google.com/hangouts/_/api/hangout.js?v=1.2"></script>
       <!-- Your application code -->
       	<html>
       	<head>

@@ -51,7 +51,7 @@
 				height=$(window).height()-50;
 				width=$(window).width()-120;
 
-				init();
+				setDefaults();
 
 				$(".tools").click(function(){
 					$(".selected").removeClass("selected");
@@ -96,7 +96,7 @@
 
 		}
 
-		function init()
+		function setDefaults()
 		{
 			canvaso = document.getElementById('board');
 			contexto = canvaso.getContext('2d');
@@ -256,17 +256,20 @@
 			contexto.clearRect(0,0,width,height);
 		}
 
-		gapi.hangout.onApiReady.add(function(eventObj) 
-                { 
-	         	try{
-	                	if (eventObj.isApiReady) { 
-	                   		startApp(); 
-	                  	} 
-	                }
-	                catch(e){
-	                	console.log(e.message);
-	                }
-                }); 
+		function init(){
+			gapi.hangout.onApiReady.add(function(eventObj) 
+	                { 
+		         	try{
+		                	if (eventObj.isApiReady) { 
+		                   		startApp(); 
+		                  	} 
+		                }
+		                catch(e){
+		                	console.log(e.message);
+		                }
+	                }); 
+                }
+                init();
 	</script>			
 	</head>
 	<body>

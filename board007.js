@@ -1,5 +1,5 @@
 		var canvas,context;
-		var canvaso,contexto;
+		var canvasO,contextO;
 
 		var startX=0;
 		var startY=0;
@@ -19,8 +19,8 @@
 
 		var x,y;
 
-		var bgcol="white";
-		var linecol="black";
+		var bgCol="white";
+		var lineCol="black";
 
 		var container;
 
@@ -29,63 +29,14 @@
 		var offsetX = 0;
 		var offsetY = 0;
 
-		function startApp(){
-			//$.fn.mColorPicker.init.replace = false;
-
-				height=$(window).height()-50;
-				width=$(window).width()-120;
-
-				setDefaults();
-
-				$(".tools").click(function(){
-					$(".selected").removeClass("selected");
-					$(this).addClass("selected");
-					selectedTool=this.id;
-					context.lineWidth=1;
-					context.strokeStyle=linecol;
-
-					if(selectedTool!="cursor")
-					{
-						if(document.getElementById('board').childNodes.length==1)
-						{
-							if((selectedTool=="rect")||(selectedTool=="circle")||(selectedTool=="line"))
-							{
-								document.getElementById('cnvs').style.cursor="crosshair";
-		                                        }
-							else 
-							{
-								document.getElementById('cnvs').style.cursor="default";
-							}
-							addTempCanvas();
-						}
-						if(selectedTool=="clearall")
-						{
-							clearCanvas();
-						}
-					}
-					else 
-					{
-						$('#tempImg').remove();
-					}
-
-
-				});
-
-
-				$('#linecolor').mColorPicker();
-				$('#linecolor').bind('colorpicked', function(){
-					linecol=($(this).val());
-					context.strokeStyle=linecol;
-				});
-
-		}
+		
 
 		function setDefaults()
 		{
-			canvaso = document.getElementById('board');
-			contexto = canvaso.getContext('2d');
-			canvaso.height = height;
-			canvaso.width = width;
+			canvasO = document.getElementById('board');
+			contextO = canvasO.getContext('2d');
+			canvasO.height = height;
+			canvasO.width = width;
 
 			addTempCanvas();
 
@@ -95,7 +46,7 @@
 
 		function addTempCanvas()
 		{
-			container = canvaso.parentNode;	
+			container = canvasO.parentNode;	
 			canvas = document.createElement('canvas');
 			canvas.id     = 'tempImg';
 			canvas.width  = width;
@@ -108,12 +59,12 @@
 			canvas.addEventListener('mousemove',mouseMove,false);
 			canvas.addEventListener('mouseout',mouseOut,false);
 
-			canvaso.addEventListener('mouseup', canvMouse, false);
+			canvasO.addEventListener('mouseup', canvMouse, false);
 		}
 
 		function canvMouse(event)
 		{
-			if (selectedTool == "cursor") 
+			if (selectedTool === "cursor") 
 			{
 				startX=event.screenX;
 				startY=event.screenY;
@@ -127,22 +78,22 @@
 
 		function mouseMove(event)
 		{
-			context.strokeStyle=linecol;
-			if (event.clientX || event.clientY == 0)
+			context.strokeStyle=lineCol;
+			if (event.clientX || event.clientY === 0)
 			{
 				x=event.clientX;
 				y=event.clientY;
 
-				if(selectedTool=="pencil"||selectedTool=="brush"||selectedTool=="eraser")
+				if(selectedTool==="pencil"||selectedTool==="brush"||selectedTool==="eraser")
 				{					
-					if(selectedTool!="pencil")
+					if(selectedTool!=="pencil")
 					{
 						context.lineWidth=5;
 					}
 
-					if(selectedTool=="eraser")
+					if(selectedTool==="eraser")
 					{	
-						context.strokeStyle=bgcol;
+						context.strokeStyle=bgCol;
 					}
 
 					if (started) 
@@ -158,7 +109,7 @@
 					}
 				}
 
-				else if(selectedTool=="clearall"||selectedTool=="cursor")
+				else if(selectedTool==="clearall"||selectedTool==="cursor")
 				{
 				}
 				else 
@@ -191,9 +142,9 @@
 
 		function img_update() 
 		{
-			contexto.beginPath();
-			contexto.drawImage(canvas, 0, 0);
-			contexto.closePath();
+			contextO.beginPath();
+			contextO.drawImage(canvas, 0, 0);
+			contextO.closePath();
 			context.clearRect(0, 0, canvas.width, canvas.height);
 		}
 
@@ -237,8 +188,59 @@
 
 		function clearCanvas()
 		{
-			contexto.clearRect(0,0,width,height);
+			contextO.clearRect(0,0,width,height);
 		}
+
+        function startApp(){
+//			$.fn.mColorPicker.init.replace = false;
+
+            height=$(window).height()-50;
+            width=$(window).width()-120;
+
+            setDefaults();
+
+            $(".tools").click(function(){
+                $(".selected").removeClass("selected");
+                $(this).addClass("selected");
+                selectedTool=this.id;
+                context.lineWidth=1;
+                context.strokeStyle=lineCol;
+
+                if(selectedTool!=="cursor")
+                {
+                    if(document.getElementById('board').childNodes.length===1)
+                    {
+                        if((selectedTool==="rect")||(selectedTool==="circle")||(selectedTool==="line"))
+                        {
+                            document.getElementById('cnvs').style.cursor="crosshair";
+                        }
+                        else
+                        {
+                            document.getElementById('cnvs').style.cursor="default";
+                        }
+                        addTempCanvas();
+                    }
+                    if(selectedTool==="clearall")
+                    {
+                        clearCanvas();
+                    }
+                }
+                else
+                {
+                    $('#tempImg').remove();
+                }
+
+
+            });
+
+
+            /*$('#lineColor').mColorPicker();
+             $('#lineColor').bind('colorpicked', function(){
+             lineCol=($(this).val());
+             context.strokeStyle=lineCol;
+             });*/
+
+        }
 
 		function init(){
 			gapi.hangout.onApiReady.add(function(eventObj) 

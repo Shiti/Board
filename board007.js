@@ -30,7 +30,7 @@
 		var offsetY = 0;
 
 		function startApp(){
-			$.fn.mColorPicker.init.replace = false;
+			//$.fn.mColorPicker.init.replace = false;
 
 				height=$(window).height()-50;
 				width=$(window).width()-120;

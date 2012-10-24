@@ -216,7 +216,7 @@
                         }
                         else if(selectedTool==="pencil")
                         {
-                            $('#cnvs').css('cursor',"url('Pencil.cur'),auto");
+                            $('#cnvs').css('cursor',"url('https://github.com/Shiti/Board/blob/master/Pencil.cur'),auto");
                         }
                         else if(selectedTool==="brush")
                         {

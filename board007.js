@@ -214,6 +214,18 @@
                         {
                             document.getElementById('cnvs').style.cursor="crosshair";
                         }
+                        else if(selectedTool==="pencil")
+                        {
+                            $('#cnvs').css('cursor',"url('Pencil.cur'),auto");
+                        }
+                        else if(selectedTool==="brush")
+                        {
+                            $('#cnvs').css('cursor',"url('Brush.cur'),auto");
+                        }
+                        else if(selectedTool==="eraser")
+                        {
+                            $('#cnvs').css('cursor',"url('eraser.cur'),auto");
+                        }
                         else
                         {
                             document.getElementById('cnvs').style.cursor="default";

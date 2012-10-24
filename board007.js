@@ -262,7 +262,7 @@
 		         	try{
 		                	if (eventObj.isApiReady) { 
 		                   		startApp(); 
-						gapi.hangout.data.submitDelta( {'board': JSON.stringify(canvasO), 'drawingBoard': JSON.stringify(canvas),'currentUser':partipantId} );
+						gapi.hangout.data.submitDelta( {'board': JSON.stringify(canvasO)} );
 						gapi.hangout.data.onStateChanged(function (event ) {
 							console.log(event);
 						});

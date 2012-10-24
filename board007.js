@@ -258,10 +258,11 @@
 		
 			gapi.hangout.onApiReady.add(function(eventObj) 
 	                { 
-				gapi.hangout.data.submitDelta( {'board': JSON.stringify(canvasO), 'drawingBoard': JSON.stringify(canvas),'currentUser':partipantId} );
+				
 		         	try{
 		                	if (eventObj.isApiReady) { 
 		                   		startApp(); 
+						gapi.hangout.data.submitDelta( {'board': JSON.stringify(canvasO), 'drawingBoard': JSON.stringify(canvas),'currentUser':partipantId} );
 		                  	} 
 		                }
 		                catch(e){

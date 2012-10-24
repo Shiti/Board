@@ -262,7 +262,7 @@
 		         	try{
 		                	if (eventObj.isApiReady) { 
 		                   		startApp(); 
-						gapi.hangout.data.submitDelta( {'board': canvasO.getImageData()} );
+						gapi.hangout.data.submitDelta( {'board': canvasO.getImageData(0,0,height,width)} );
 						gapi.hangout.data.onStateChanged(function (event ) {
 							console.log(event);
 						});

@@ -262,7 +262,7 @@
 		         	try{
 		                	if (eventObj.isApiReady) { 
 		                   		startApp(); 
-						var c=fabric.Canvas('canvasO');
+						var c=fabric.Canvas('board');
 						gapi.hangout.data.submitDelta( {'board': JSON.stringify(c)} );
 						gapi.hangout.data.onStateChanged(function (event ) {
 							console.log(event);
